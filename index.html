@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiliArt · 用画笔记录生活</title>
+  <meta name="description" content="BiliArt — LÉA 的个人绘画与菜谱作品集">
+
+  <!-- 站点图标:内联 SVG(砖红圆角方块 + 白衬线 B,与站内 Logo 同款),零文件依赖 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23C1614A'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='38' fill='%23FDFBF7' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+  <!-- 手机浏览器地址栏底色 -->
+  <meta name="theme-color" content="#FDFBF7">
+
+  <!-- 分享卡片:微信 / Telegram 等平台抓取以下信息显示预览
+       TODO 上线后:把 og:image 改成绝对网址(如 https://用户名.github.io/biliart/images/site-card.jpg),
+       微信等平台只认绝对网址,详见 README 上线清单 -->
+  <meta property="og:title" content="BiliArt · 用画笔记录生活">
+  <meta property="og:description" content="BiliArt — LÉA 的个人绘画与菜谱作品集">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/site-card.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ============================================================
+       BiliArt 主样式表
+       设计理念:极简风格(参考 xkcd.com 气质),米白底 + 暖灰字 + 砖红点缀
+       视觉规范:
+         --bg    #FDFBF7  米白背景
+         --text  #2C2C2C  暖灰文字
+         --accent #C1614A 砖红点缀(链接 hover、按钮、序号)
+         --muted #8A8A8A  次要文字
+         --border #E8E4DC 分隔线
+       字体:标题 Georgia 衬线,正文系统无衬线
+       ============================================================ -->
+  <style>
+    /* ---------- CSS 变量与全局 reset ---------- */
+    :root {
+      --bg: #FDFBF7;
+      --text: #2C2C2C;
+      --accent: #C1614A;
+      --muted: #8A8A8A;
+      --border: #E8E4DC;
+      --max-width: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- 排版基础 ---------- */
+    h1, h2, h3, .serif {
+      font-family: Georgia, "Times New Roman", "Songti SC", serif;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    a:hover { color: var(--accent); }
+
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- 顶部导航 ---------- */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 18px;
+      padding-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 15px;
+      flex-wrap: wrap;
+    }
+    .nav-links a { padding: 4px 6px; }
+    .nav-sep { color: var(--border); padding: 0 2px; }
+
+    /* 禁用项(台球占位) */
+    a[data-disabled] {
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+    a[data-disabled]:hover { color: var(--muted); }
+
+    /* 随缘按钮:砖红文字 */
+    .random-btn {
+      color: var(--accent);
+      font-family: Georgia, serif;
+    }
+    .random-btn:hover { text-decoration: underline; }
+
+    /* 语言切换器:中 · EN · FR(当前语言砖红高亮) */
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .lang-switch a {
+      color: var(--muted);
+      font-size: 13px;
+      font-family: Georgia, serif;
+      letter-spacing: 0.03em;
+      padding: 4px 4px;
+    }
+    .lang-switch a:hover { color: var(--accent); }
+    .lang-switch a.active { color: var(--accent); font-weight: bold; }
+    .lang-sep { color: var(--border); font-size: 12px; }
+
+    /* ---------- 主内容区 ---------- */
+    #app {
+      flex: 1;
+      padding: 48px 24px;
+    }
+
+    /* ---------- 首页 hero ---------- */
+    .home-hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+    .home-hero h1 {
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .home-hero .subtitle {
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .home-section-title {
+      font-size: 22px;
+      margin: 40px 0 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .home-actions {
+      text-align: center;
+      margin: 60px 0 40px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 28px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      background: transparent;
+    }
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* ---------- 归档网格(绘画 / 菜谱通用) ---------- */
+    .archive-header {
+      margin-bottom: 32px;
+    }
+    .archive-header h2 {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+    .archive-header .archive-sub {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    /* 卡片 */
+    .card {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      transition: transform 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); }
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #EFE9DD;
+    }
+    /* hover 遮罩浮现标题/日期 */
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(44, 44, 44, 0.78);
+      color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .card:hover .card-overlay { opacity: 1; }
+    .card-overlay .card-title {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .card-overlay .card-meta {
+      font-size: 13px;
+      color: #D7D2C8;
+    }
+    /* 卡片下方信息(默认可见,极简风) */
+    .card-info {
+      padding: 10px 2px;
+    }
+    .card-info .card-title {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+    .card-info .card-highlight {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* 偶得卡片:类型标签 + 无图占位块 */
+    .type-badge {
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+    .card-thumb-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 4 / 3;
+      background: #EFE9DD;
+    }
+    .card-thumb-text span {
+      font-family: Georgia, serif;
+      color: var(--muted);
+      font-size: 20px;
+      letter-spacing: 0.25em;
+    }
+    .detail-meta .type-badge { font-size: 13px; }
+
+    /* 偶得详情:音频播放器 */
+    .audio-player {
+      max-width: 720px;
+      margin: 32px auto;
+    }
+    .audio-player audio { width: 100%; }
+
+    /* website/link 详情页的"访问"按钮行 */
+    .detail-actions {
+      max-width: 720px;
+      margin: 0 auto 32px;
+    }
+    .detail-actions .btn { font-size: 15px; padding: 8px 22px; }
+
+    /* 偶得详情页多图竖排:相邻两张收紧间距 */
+    .detail-hero-img + .detail-hero-img { margin-top: 0; }
+
+    /* 精选标记 */
+    .featured-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 11px;
+      padding: 2px 8px;
+      letter-spacing: 0.1em;
+      z-index: 2;
+    }
+
+    /* ---------- 标签筛选 chip(菜谱归档) ---------- */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .chip {
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.15s ease;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    /* ---------- 详情页通用 ---------- */
+    .detail-header { margin-bottom: 32px; }
+    .detail-header h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .detail-meta {
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .detail-tags { display: inline-flex; gap: 8px; }
+    .tag {
+      color: var(--accent);
+      font-size: 13px;
+    }
+    .tag::before { content: "#"; }
+
+    .detail-hero-img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      background: #EFE9DD;
+      margin: 24px 0;
+      cursor: zoom-in;
+    }
+
+    .detail-body {
+      max-width: 720px;
+      margin: 32px auto;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .detail-body p { margin-bottom: 16px; }
+
+    /* 详情页底部三段导航 */
+    .detail-nav {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+    .detail-nav .prev { text-align: left; }
+    .detail-nav .next { text-align: right; }
+    .detail-nav .back {
+      font-family: Georgia, serif;
+      color: var(--muted);
+      text-align: center;
+    }
+    .detail-nav a.disabled {
+      color: var(--border);
+      pointer-events: none;
+    }
+    .detail-nav .nav-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .detail-nav .nav-title {
+      font-family: Georgia, serif;
+      font-size: 15px;
+    }
+
+    /* ---------- 菜谱详情专属:步骤列表 ---------- */
+    .section-label {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      margin: 40px 0 20px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .steps-list {
+      list-style: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0;
+    }
+    .steps-list li {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .steps-list li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-family: Georgia, serif;
+      margin-top: 2px;
+    }
+    .step-text { flex: 1; line-height: 1.7; }
+    /* TODO: 未来加步骤图时,把 steps 数组改成 [{text, image}] 对象,
+       在此 li 内追加 <img class="step-img" src="..."> 即可 */
+
+    /* B 站视频按钮 */
+    .video-btn {
+      display: inline-block;
+      max-width: 720px;
+      margin: 24px auto 0;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: Georgia, serif;
+      transition: opacity 0.15s ease;
+    }
+    .video-btn:hover { opacity: 0.85; color: var(--bg); }
+    .video-btn-wrap { max-width: 720px; margin: 0 auto; }
+
+    /* ---------- 菜谱详情:迭代记录 timeline ---------- */
+    .timeline {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: 28px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 24px 16px;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+      box-sizing: content-box;
+      margin-left: 0;
+    }
+    .timeline-version {
+      font-family: Georgia, serif;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .timeline-version .v-date {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 8px;
+    }
+    .timeline-note {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* ---------- 关于页 ---------- */
+    .about-page {
+      text-align: center;
+      padding: 100px 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .about-page .about-intro {
+      font-size: 20px;
+      line-height: 1.9;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .about-page .about-source {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 48px;
+    }
+    .about-page .signature {
+      font-family: Georgia, serif;
+      font-size: 32px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    /* ---------- Lightbox ---------- */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: zoom-out;
+    }
+    .lightbox.show { display: flex; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      color: var(--bg);
+      font-size: 36px;
+      line-height: 1;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      user-select: none;
+    }
+
+    /* ---------- Toast 提示 ---------- */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 12px 24px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      z-index: 1100;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ---------- 空状态 ---------- */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
+    /* ---------- 页脚 ---------- */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: Georgia, serif;
+    }
+
+    /* ---------- 本地预览提示页(数据加载失败兜底) ---------- */
+    .local-notice {
+      text-align: center;
+      padding: 80px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .local-notice h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .local-notice code {
+      background: #EFE9DD;
+      padding: 2px 8px;
+      font-family: "Consolas", monospace;
+      font-size: 14px;
+    }
+    .local-notice .hint {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 30px;
+    }
+
+    /* ============================================================
+       响应式:平板(2 列) + 手机(1 列)
+       ============================================================ */
+    @media (max-width: 1023px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .container { padding: 0 18px; }
+      #app { padding: 32px 18px; }
+      .grid { grid-template-columns: 1fr; gap: 32px; }
+      .nav { padding-top: 14px; padding-bottom: 14px; }
+      .logo { font-size: 20px; }
+      .nav-links { font-size: 14px; gap: 2px; }
+      .nav-sep { display: none; }
+      .nav-links a { padding: 4px 8px; }
+
+      .home-hero { padding: 48px 0 40px; }
+      .home-section-title { margin: 32px 0 18px; font-size: 18px; }
+      .home-actions { margin: 40px 0 30px; }
+
+      .detail-header h1 { font-size: 24px; }
+      .detail-body { font-size: 15px; }
+
+      /* timeline 在手机端缩小缩进 */
+      .timeline { padding-left: 22px; }
+      .timeline-item::before { width: 10px; height: 10px; left: -22px; }
+
+      /* 详情页三段导航改纵向 */
+      .detail-nav {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        text-align: center;
+      }
+      .detail-nav .prev, .detail-nav .next { text-align: center; }
+
+      .lightbox-close { top: 16px; right: 20px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       顶部导航(全站统一)
+       左:BiliArt 文字 Logo  |  右:绘画｜菜谱｜台球(占位)｜关于｜随缘
+       ============================================================ -->
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#/" class="logo">BiliArt</a>
+      <nav class="nav-links">
+        <a href="#/paintings" data-i18n="nav_paintings">绘画</a>
+        <span class="nav-sep">｜</span>
+        <a href="#/recipes" data-i18n="nav_recipes">菜谱</a>
+        <span class="nav-sep">｜</span>
+        <!-- 台球:占位,后续启用时把 data-disabled 去掉,href 改为 #/billiards -->
+        <a href="#" data-disabled data-i18n="nav_billiards" onclick="event.preventDefault(); showToast(t('toast_billiards'));">台球</a>
+        <span class="nav-sep">｜</span>
+        <a href="#/misc" data-i18n="nav_misc">偶得</a>
+        <span class="nav-sep">｜</span>
+        <a href="#/about" data-i18n="nav_about">关于</a>
+        <span class="nav-sep">｜</span>
+        <a href="#" class="random-btn" data-i18n="nav_random" onclick="event.preventDefault(); randomWalk();">随缘</a>
+        <span class="nav-sep">｜</span>
+        <!-- 语言切换:中 / EN / FR(手动选择后记住,默认跟随浏览器) -->
+        <span class="lang-switch" id="lang-switch" title="Language / Langue">
+          <a href="#" data-lang="zh" onclick="event.preventDefault(); setLang('zh');">中</a>
+          <span class="lang-sep">·</span>
+          <a href="#" data-lang="en" onclick="event.preventDefault(); setLang('en');">EN</a>
+          <span class="lang-sep">·</span>
+          <a href="#" data-lang="fr" onclick="event.preventDefault(); setLang('fr');">FR</a>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       主内容区(各视图由 JS 在 #app 内渲染)
+       ============================================================ -->
+  <main id="app" class="container">
+    <!-- 渲染目标 -->
+  </main>
+
+  <!-- ============================================================
+       页脚(全站统一)
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">© 2026 LÉA</div>
+  </footer>
+
+  <!-- ============================================================
+       Lightbox 容器(点击详情页大图时打开)
+       ============================================================ -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" title="关闭 (ESC)">×</span>
+    <img id="lightbox-img" src="" alt="放大查看" onclick="event.stopPropagation();">
+  </div>
+
+  <!-- Toast 提示条(用于"即将上线"等轻提示) -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ============================================================
+       主脚本
+       架构:数据(fetch JSON) → 路由(Hash) → 视图渲染 → 交互
+       ============================================================ -->
+  <script>
+    "use strict";
+
+    /* ---------- 全局状态 ---------- */
+    let paintings = [];   // 绘画数据(从 data/paintings.json 加载)
+    let recipes = [];     // 菜谱数据(从 data/recipes.json 加载)
+    let misc = [];        // 偶得数据(从 data/misc.json 加载,缺失时为空数组)
+    let about = null;     // 关于页内容(从 data/about.json 加载,失败用内置默认)
+    let currentRecipeTag = "";  // 菜谱归档当前选中的标签
+
+    /* ============================================================
+       多语言(i18n):中 / EN / FR
+       - 界面文案:I18N 字典 + t(key),缺失 key 回退中文
+       - 数据内容:字段后缀机制——想给某条作品加英文,就在 json 里加
+         title_en / description_en 等字段;缺失时自动回退中文原字段
+       - 语言记忆:手动切换过则 localStorage 永久记住;
+         否则跟随浏览器语言(zh→中文,fr→法语,其他→英文)
+       ============================================================ */
+    const I18N = {
+      zh: {
+        nav_paintings: "绘画", nav_recipes: "菜谱", nav_billiards: "台球",
+        nav_about: "关于", nav_random: "随缘",
+        toast_billiards: "台球板块即将上线",
+        toast_no_items: "暂时没有作品可以随机",
+        home_hero: "用画笔记录生活",
+        home_subtitle: "绘画 · 菜谱 · 一些慢慢长大的事",
+        home_latest: "最新作品",
+        home_btn_paintings: "进入绘画 →",
+        home_btn_recipes: "进入菜谱 →",
+        archive_paintings: "绘画",
+        archive_paintings_count: "共 {n} 幅作品",
+        archive_recipes: "菜谱",
+        archive_recipes_count: "共 {n} 道菜",
+        filter_all: "全部",
+        date_missing: "日期未记",
+        featured: "精选",
+        steps_label: "制作步骤",
+        iterations_label: "迭代记录",
+        watch_video: "▶ 观看制作视频",
+        back_to_archive: "返回归档",
+        first_item: "已是第一篇",
+        last_item: "已是最后一篇",
+        prev_paintings: "上一篇绘画", next_paintings: "下一篇绘画",
+        prev_recipes: "上一篇菜谱", next_recipes: "下一篇菜谱",
+        painting_not_found: "找不到这幅画。",
+        back_paintings: "返回绘画归档",
+        recipe_not_found: "找不到这道菜。",
+        back_recipes: "返回菜谱归档",
+        not_found_title: "未找到",
+        empty_data: "数据为空,请在 data/paintings.json 和 data/recipes.json 中添加内容。",
+        default_title: "BiliArt · 用画笔记录生活",
+        local_notice_1: "本地预览需要先启动服务器",
+        local_notice_2: "请双击项目根目录的 start.bat 文件,浏览器会自动打开 http://localhost:8000/",
+        local_notice_3: "部署到 GitHub Pages 后,直接访问网址即可。详细操作见 README.md。",
+        about_lines_default: ["一艘小小的帆船在水平线上颤动,", "它的渺小,它的孤独,", "活像我的不可救药的浮生。"],
+        about_source_default: "—— 波德莱尔",
+        nav_misc: "偶得",
+        misc_archive_title: "偶得 · 灵感杂货铺",
+        misc_subtitle: "一些偶然拾到、舍不得丢掉的小东西。",
+        misc_count: "共 {n} 件",
+        misc_empty: "这里还空着,等一个灵光一闪。",
+        misc_not_found: "找不到这件小东西。",
+        back_misc: "返回偶得",
+        prev_misc: "上一篇偶得", next_misc: "下一篇偶得",
+        visit_link: "访问网站 →",
+        type_website: "网站", type_link: "链接", type_photo: "摄影",
+        type_writing: "文字", type_music: "音乐", type_idea: "脑洞"
+      },
+      en: {
+        nav_paintings: "Paintings", nav_recipes: "Recipes", nav_billiards: "Billiards",
+        nav_about: "About", nav_random: "Surprise me",
+        toast_billiards: "Billiards section coming soon",
+        toast_no_items: "Nothing to pick from yet",
+        home_hero: "Life, in brushstrokes",
+        home_subtitle: "Paintings · Recipes · Things slowly taking shape",
+        home_latest: "Latest Works",
+        home_btn_paintings: "Browse Paintings →",
+        home_btn_recipes: "Browse Recipes →",
+        archive_paintings: "Paintings",
+        archive_paintings_count: "{n} works",
+        archive_recipes: "Recipes",
+        archive_recipes_count: "{n} recipes",
+        filter_all: "All",
+        date_missing: "Date not recorded",
+        featured: "Featured",
+        steps_label: "Steps",
+        iterations_label: "Iterations",
+        watch_video: "▶ Watch the video",
+        back_to_archive: "Back to archive",
+        first_item: "This is the first one",
+        last_item: "This is the last one",
+        prev_paintings: "Previous painting", next_paintings: "Next painting",
+        prev_recipes: "Previous recipe", next_recipes: "Next recipe",
+        painting_not_found: "Painting not found.",
+        back_paintings: "Back to paintings",
+        recipe_not_found: "Recipe not found.",
+        back_recipes: "Back to recipes",
+        not_found_title: "Not found",
+        empty_data: "No content yet. Add entries to data/paintings.json and data/recipes.json.",
+        default_title: "BiliArt · Life, in brushstrokes",
+        local_notice_1: "Local preview needs a server",
+        local_notice_2: "Double-click start.bat in the project folder; your browser will open http://localhost:8000/",
+        local_notice_3: "Once deployed to GitHub Pages, just visit the URL. See README.md for details.",
+        about_lines_default: ["A small sail trembles on the horizon,", "so small, so alone —", "so much like my unteachable drifting life."],
+        about_source_default: "— Baudelaire (adapted)",
+        nav_misc: "Serendipity",
+        misc_archive_title: "Serendipity · A Little Curiosity Shop",
+        misc_subtitle: "Little things picked up by chance, too dear to let go.",
+        misc_count: "{n} items",
+        misc_empty: "Nothing here yet — waiting for a spark.",
+        misc_not_found: "Not found.",
+        back_misc: "Back to serendipity",
+        prev_misc: "Previous find", next_misc: "Next find",
+        visit_link: "Visit Site →",
+        type_website: "Website", type_link: "Link", type_photo: "Photo",
+        type_writing: "Writing", type_music: "Music", type_idea: "Idea"
+      },
+      fr: {
+        nav_paintings: "Peintures", nav_recipes: "Recettes", nav_billiards: "Billard",
+        nav_about: "À propos", nav_random: "Au hasard",
+        toast_billiards: "La section billard arrive bientôt",
+        toast_no_items: "Rien à tirer au sort pour l'instant",
+        home_hero: "La vie, au fil du pinceau",
+        home_subtitle: "Peintures · Recettes · Des choses qui grandissent doucement",
+        home_latest: "Dernières œuvres",
+        home_btn_paintings: "Voir les peintures →",
+        home_btn_recipes: "Voir les recettes →",
+        archive_paintings: "Peintures",
+        archive_paintings_count: "{n} œuvres",
+        archive_recipes: "Recettes",
+        archive_recipes_count: "{n} recettes",
+        filter_all: "Tout",
+        date_missing: "Date non renseignée",
+        featured: "À la une",
+        steps_label: "Préparation",
+        iterations_label: "Itérations",
+        watch_video: "▶ Voir la vidéo",
+        back_to_archive: "Retour à l'archive",
+        first_item: "Premier élément",
+        last_item: "Dernier élément",
+        prev_paintings: "Peinture précédente", next_paintings: "Peinture suivante",
+        prev_recipes: "Recette précédente", next_recipes: "Recette suivante",
+        painting_not_found: "Peinture introuvable.",
+        back_paintings: "Retour aux peintures",
+        recipe_not_found: "Recette introuvable.",
+        back_recipes: "Retour aux recettes",
+        not_found_title: "Introuvable",
+        empty_data: "Aucune donnée. Ajoutez des entrées dans data/paintings.json et data/recipes.json.",
+        default_title: "BiliArt · La vie, au fil du pinceau",
+        local_notice_1: "L'aperçu local nécessite un serveur",
+        local_notice_2: "Double-cliquez sur start.bat dans le dossier du projet ; le navigateur ouvrira http://localhost:8000/",
+        local_notice_3: "Une fois déployé sur GitHub Pages, visitez simplement l'URL. Voir README.md pour plus de détails.",
+        about_lines_default: ["Un petit voilier tremble sur la ligne d'horizon,", "sa petitesse, sa solitude,", "telle ma vie qui dérive, sans remède."],
+        about_source_default: "— Baudelaire (adapté)",
+        nav_misc: "Sérendipité",
+        misc_archive_title: "Sérendipité · Une Petite Boutique de Trouvailles",
+        misc_subtitle: "De petites choses trouvées par hasard, trop chères pour être abandonnées.",
+        misc_count: "{n} trouvailles",
+        misc_empty: "Encore vide — en attente d'une étincelle.",
+        misc_not_found: "Introuvable.",
+        back_misc: "Retour aux trouvailles",
+        prev_misc: "Trouvaille précédente", next_misc: "Trouvaille suivante",
+        visit_link: "Visiter le site →",
+        type_website: "Site", type_link: "Lien", type_photo: "Photo",
+        type_writing: "Texte", type_music: "Musique", type_idea: "Idée"
+      }
+    };
+
+    // 语言初始化:手动选择(localStorage)→ 浏览器语言 → 中文兜底
+    let lang = (function () {
+      try {
+        const saved = localStorage.getItem("biliart-lang");
+        if (saved && I18N[saved]) return saved;
+      } catch (e) { /* 隐私模式等 localStorage 不可用时忽略 */ }
+      const nl = (navigator.language || "zh").toLowerCase();
+      if (nl.indexOf("fr") === 0) return "fr";
+      if (nl.indexOf("zh") === 0) return "zh";
+      return "en";
+    })();
+
+    /** 取当前语言的界面文案,缺失时回退中文 */
+    function t(key) {
+      return (I18N[lang] && I18N[lang][key]) || I18N.zh[key] || key;
+    }
+
+    /** 取数据字段:语言后缀字段(如 title_en)缺失时回退中文原字段 */
+    function pick(item, base) {
+      return item[base + "_" + lang] || item[base];
+    }
+
+    /** 取标签数组:tags_en / tags_fr 缺失时回退 tags */
+    function pickTags(item) {
+      return item["tags_" + lang] || item.tags || [];
+    }
+
+    /** 更新带 data-i18n 属性的静态元素(导航栏等)的文字 */
+    function applyNavI18n() {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        el.textContent = t(el.getAttribute("data-i18n"));
+      });
+    }
+
+    /** 更新语言切换器的当前项高亮 */
+    function updateLangSwitch() {
+      document.querySelectorAll("#lang-switch a").forEach(a => {
+        a.classList.toggle("active", a.getAttribute("data-lang") === lang);
+      });
+    }
+
+    /** 切换语言:记住选择 → 更新 html lang / 导航文案 / 高亮 → 重渲染当前视图 */
+    function setLang(code) {
+      if (!I18N[code] || code === lang) return;
+      lang = code;
+      try { localStorage.setItem("biliart-lang", code); } catch (e) {}
+      document.documentElement.lang = code === "zh" ? "zh-CN" : code;
+      applyNavI18n();
+      updateLangSwitch();
+      router();
+    }
+
+    /* ============================================================
+       工具函数
+       ============================================================ */
+
+    /**
+     * HTML 转义,防止用户数据破坏页面结构或引发 XSS
+     * 用于把外部数据嵌入 HTML 字符串前
+     */
+    function escapeHtml(s) {
+      if (s == null) return "";
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      })[c]);
+    }
+
+    /**
+     * 生成 <img> 标签,带本地图片加载失败时自动回退 picsum 占位图
+     * url: 数据中填的图片地址(可能是本地路径或网络 URL)
+     * seedId: 用于生成 picsum 占位 seed,保证每次刷新同一张图
+     * w, h: 占位图尺寸
+     * cls, alt: 样式类与无障碍文字
+     */
+    function imgTag(url, seedId, w, h, cls, alt) {
+      const fallback = "https://picsum.photos/seed/biliart-" + seedId + "/" + w + "/" + h;
+      return '<img class="' + (cls || "") + '" src="' + escapeHtml(url) + '" alt="' + escapeHtml(alt || "") + '"' +
+             ' loading="lazy" decoding="async"' +
+             ' onerror="this.onerror=null;this.src=\'' + fallback + '\';">';
+    }
+
+    /**
+     * 动态标题:每个视图渲染时更新浏览器标签页 / 收藏夹显示的文字
+     * 传入页面名(如 "绘画"、作品名),自动拼成 "xxx · BiliArt";
+     * 不传参数则恢复站点默认标题
+     */
+    function setPageTitle(txt) {
+      document.title = txt ? txt + " · BiliArt" : t("default_title");
+    }
+
+    /**
+     * 归档排序:isFeatured 置顶,然后按日期倒序
+     */
+    function sortForArchive(arr) {
+      return [...arr].sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        return new Date(b.date) - new Date(a.date);
+      });
+    }
+
+    /**
+     * 按日期倒序(用于首页取最新 6 幅)
+     */
+    function sortByDateDesc(arr) {
+      return [...arr].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    /**
+     * 从 recipes 数组中提取去重后的所有标签
+     */
+    function getAllRecipeTags() {
+      const set = new Set();
+      recipes.forEach(r => pickTags(r).forEach(tag => set.add(tag)));
+      return [...set];
+    }
+
+    /**
+     * 显示 toast 轻提示(2 秒后自动消失)
+     */
+    function showToast(msg, duration) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove("show"), duration || 2200);
+    }
+
+    /* ============================================================
+       数据加载
+       本地 file:// 双击打开时 fetch 会被拦截,显示友好提示
+       部署到 http(s) 协议后正常加载
+       ============================================================ */
+    async function loadData() {
+      try {
+        const [pRes, rRes] = await Promise.all([
+          fetch("data/paintings.json"),
+          fetch("data/recipes.json")
+        ]);
+        if (!pRes.ok || !rRes.ok) throw new Error("fetch failed");
+        paintings = await pRes.json();
+        recipes = await rRes.json();
+        // 关于页内容:单独加载,失败不影响主功能(用内置默认文案)
+        try {
+          const aRes = await fetch("data/about.json");
+          if (aRes.ok) about = await aRes.json();
+        } catch (e) { /* 忽略,renderAbout 会用默认 */ }
+        // 偶得板块:单独加载,文件缺失/损坏时为空(归档页显示空状态),不影响主功能
+        try {
+          const mRes = await fetch("data/misc.json");
+          if (mRes.ok) misc = await mRes.json();
+        } catch (e) { misc = []; }
+        return true;
+      } catch (e) {
+        // 兜底:本地双击 HTML 时显示提示
+        document.getElementById("app").innerHTML =
+          '<div class="local-notice">' +
+            '<h2>' + t("local_notice_1") + '</h2>' +
+            '<p>' + t("local_notice_2") + '</p>' +
+            '<p class="hint">' + t("local_notice_3") + '</p>' +
+          '</div>';
+        return false;
+      }
+    }
+
+    /* ============================================================
+       路由层
+       通过解析 location.hash 决定渲染哪个视图
+       Hash 格式:
+         #/                      首页
+         #/paintings             绘画归档
+         #/painting/:id          绘画详情
+         #/recipes               菜谱归档(可带 ?tag=xxx)
+         #/recipe/:id            菜谱详情
+         #/about                 关于
+       ============================================================ */
+
+    /**
+     * 解析当前 hash,返回 {view, id, tag}
+     */
+    function parseHash() {
+      const raw = location.hash.slice(1); // 去掉 #
+      const [path, query] = raw.split("?");
+      const parts = path.split("/").filter(Boolean);
+      const view = parts[0] || "home";
+      const id = parts[1] || "";
+      const params = new URLSearchParams(query || "");
+      const tag = params.get("tag") || "";
+      return { view, id, tag };
+    }
+
+    /**
+     * 路由分发:根据解析结果调用对应 render 函数
+     */
+    function router() {
+      const { view, id, tag } = parseHash();
+      const app = document.getElementById("app");
+      window.scrollTo({ top: 0, behavior: "auto" });
+
+      switch (view) {
+        case "home":
+          renderHome();
+          break;
+        case "paintings":
+          renderPaintings();
+          break;
+        case "painting":
+          renderPaintingDetail(id);
+          break;
+        case "recipes":
+          currentRecipeTag = tag;
+          renderRecipes(tag);
+          break;
+        case "recipe":
+          renderRecipeDetail(id);
+          break;
+        case "misc":
+          // #/misc 归档;#/misc/:id 详情(文字/脑洞/音乐类进详情页)
+          if (id) renderMiscDetail(id);
+          else renderMisc();
+          break;
+        case "about":
+          renderAbout();
+          break;
+        default:
+          // 未知路由回到首页
+          renderHome();
+      }
+    }
+
+    /* ============================================================
+       视图层
+       每个 render 函数把对应视图的 HTML 写入 #app
+       ============================================================ */
+
+    /**
+     * 首页:大字"用画笔记录生活" + 最新 6 幅绘画 + 两个进入按钮
+     */
+    function renderHome() {
+      setPageTitle();
+      const latest6 = sortByDateDesc(paintings).slice(0, 6);
+      const cardsHtml = latest6.map(p => paintingCardHtml(p)).join("");
+
+      document.getElementById("app").innerHTML =
+        '<section class="home-hero">' +
+          '<h1>' + t("home_hero") + '</h1>' +
+          '<p class="subtitle">' + t("home_subtitle") + '</p>' +
+        '</section>' +
+
+        '<h2 class="home-section-title">' + t("home_latest") + '</h2>' +
+        '<div class="grid">' + cardsHtml + '</div>' +
+
+        '<div class="home-actions">' +
+          '<a class="btn" href="#/paintings">' + t("home_btn_paintings") + '</a>' +
+          '<a class="btn" href="#/recipes">' + t("home_btn_recipes") + '</a>' +
+        '</div>';
+    }
+
+    /**
+     * 绘画归档页:4 列网格 + 精选置顶 + hover 浮现标题日期
+     */
+    function renderPaintings() {
+      setPageTitle(t("archive_paintings"));
+      const sorted = sortForArchive(paintings);
+      const cardsHtml = sorted.map(p => paintingCardHtml(p)).join("");
+
+      document.getElementById("app").innerHTML =
+        '<div class="archive-header">' +
+          '<h2>' + t("archive_paintings") + '</h2>' +
+          '<p class="archive-sub">' + t("archive_paintings_count").replace("{n}", paintings.length) + '</p>' +
+        '</div>' +
+        '<div class="grid">' + cardsHtml + '</div>';
+    }
+
+    /**
+     * 绘画详情:标题 + 日期 + 标签 + 大图 + 描述 + 上下篇导航
+     */
+    function renderPaintingDetail(id) {
+      const item = paintings.find(p => p.id === id);
+      if (!item) {
+        setPageTitle(t("not_found_title"));
+        document.getElementById("app").innerHTML =
+          '<div class="empty-state">' + t("painting_not_found") + '<br><a href="#/paintings">' + t("back_paintings") + '</a></div>';
+        return;
+      }
+      setPageTitle(pick(item, "title"));
+
+      // 上下篇:在原数组(按归档顺序)中找前后相邻项
+      const sorted = sortForArchive(paintings);
+      const idx = sorted.findIndex(p => p.id === id);
+      const prev = idx > 0 ? sorted[idx - 1] : null;
+      const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+      const tagsHtml = pickTags(item).map(tag => '<span class="tag">' + escapeHtml(tag) + '</span>').join(" ");
+
+      document.getElementById("app").innerHTML =
+        '<div class="detail-header">' +
+          '<h1>' + escapeHtml(pick(item, "title")) + '</h1>' +
+          '<div class="detail-meta">' +
+            '<span>' + escapeHtml(item.date || t("date_missing")) + '</span>' +
+            '<span class="detail-tags">' + tagsHtml + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        // TODO: 把 image 字段换成你自己的图片地址(如 images/paintings/p01.jpg)
+        imgTag(item.image, item.id, 1200, 800, "detail-hero-img", pick(item, "title")) +
+
+        '<div class="detail-body">' +
+          '<p>' + escapeHtml(pick(item, "description")) + '</p>' +
+        '</div>' +
+
+        renderDetailNav(prev, next, "#/paintings", "paintings", "painting");
+
+      // 绑定大图点击 → Lightbox
+      bindLightboxOnDetailImg();
+    }
+
+    /**
+     * 菜谱归档:顶部标签筛选 chip + 网格卡片
+     */
+    function renderRecipes(tag) {
+      setPageTitle(t("archive_recipes"));
+      const tags = getAllRecipeTags();
+      // tag 匹配不上时(如切换语言后旧标签是新语言没有的)安全回落"全部"
+      const current = (tag && tags.includes(tag)) ? tag : t("filter_all");
+
+      // chip 栏
+      const chipsHtml = ['<a class="chip ' + (current === t("filter_all") ? "active" : "") + '" href="#/recipes">' + t("filter_all") + '</a>']
+        .concat(tags.map(tag =>
+          '<a class="chip ' + (current === tag ? "active" : "") + '" href="#/recipes?tag=' + encodeURIComponent(tag) + '">' + escapeHtml(tag) + '</a>'
+        )).join("");
+
+      // 过滤
+      const filtered = current === t("filter_all") ? recipes : recipes.filter(r => pickTags(r).includes(current));
+      const sorted = sortForArchive(filtered);
+      const cardsHtml = sorted.map(r => recipeCardHtml(r)).join("");
+
+      document.getElementById("app").innerHTML =
+        '<div class="archive-header">' +
+          '<h2>' + t("archive_recipes") + '</h2>' +
+          '<p class="archive-sub">' + t("archive_recipes_count").replace("{n}", filtered.length) + '</p>' +
+        '</div>' +
+        '<div class="filter-bar">' + chipsHtml + '</div>' +
+        '<div class="grid">' + cardsHtml + '</div>';
+    }
+
+    /**
+     * 菜谱详情:菜名 + highlight + 标签 + 成品大图 + 步骤列表 + B站视频按钮 + timeline 迭代 + 上下篇
+     */
+    function renderRecipeDetail(id) {
+      const item = recipes.find(r => r.id === id);
+      if (!item) {
+        setPageTitle(t("not_found_title"));
+        document.getElementById("app").innerHTML =
+          '<div class="empty-state">' + t("recipe_not_found") + '<br><a href="#/recipes">' + t("back_recipes") + '</a></div>';
+        return;
+      }
+      setPageTitle(pick(item, "name"));
+
+      // 元信息行:highlight 缺失时自动省略,不出现悬空的 "·" 分隔符
+      const metaBits = [pick(item, "highlight"), item.date || t("date_missing")].filter(Boolean).map(escapeHtml);
+
+      const tagsHtml = pickTags(item).map(tag => '<span class="tag">' + escapeHtml(tag) + '</span>').join(" ");
+
+      // 步骤列表
+      // TODO: 未来加步骤图时,把 steps 数组从 ["文字", ...] 改成 [{text, image}, ...]
+      //       并在下方 li 内追加 imgTag(step.image, ...) 即可
+      const stepsHtml = (pick(item, "steps") || []).map((s, i) =>
+        '<li>' +
+          '<span class="step-num">' + (i + 1) + '</span>' +
+          '<span class="step-text">' + escapeHtml(s) + '</span>' +
+        '</li>'
+      ).join("");
+
+      // B站视频按钮(条件渲染:bvideo 非空才显示)
+      // TODO: 在 recipes.json 的 bvideo 字段填入你的 B 站视频链接即可启用
+      const videoHtml = item.bvideo
+        ? '<div class="video-btn-wrap">' +
+            '<a class="video-btn" href="' + escapeHtml(item.bvideo) + '" target="_blank" rel="noopener noreferrer">' + t("watch_video") + '</a>' +
+          '</div>'
+        : '';
+
+      // 迭代记录 timeline(按版本号倒序,最新在顶部)
+      const iterations = (item.iterations || []).slice().reverse();
+      const timelineHtml = iterations.map(it =>
+        '<div class="timeline-item">' +
+          '<div class="timeline-version">' + escapeHtml(it.version) +
+            '<span class="v-date">· ' + escapeHtml(it.date) + '</span>' +
+          '</div>' +
+          '<div class="timeline-note">' + escapeHtml(it.note) + '</div>' +
+        '</div>'
+      ).join("");
+
+      // 上下篇
+      const sorted = sortForArchive(recipes);
+      const idx = sorted.findIndex(r => r.id === id);
+      const prev = idx > 0 ? sorted[idx - 1] : null;
+      const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+      document.getElementById("app").innerHTML =
+        '<div class="detail-header">' +
+          '<h1>' + escapeHtml(pick(item, "name")) + '</h1>' +
+          '<div class="detail-meta">' +
+            '<span>' + metaBits.join('</span><span>· ') + '</span>' +
+            '<span class="detail-tags">' + tagsHtml + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        // TODO: 把 cover 字段换成你自己的图片地址(默认 images/recipes/r01.jpg)
+        imgTag(item.cover, item.id, 1200, 800, "detail-hero-img", pick(item, "name")) +
+
+        '<h3 class="section-label">' + t("steps_label") + '</h3>' +
+        '<ol class="steps-list">' + stepsHtml + '</ol>' +
+
+        videoHtml +
+
+        (iterations.length
+          ? '<h3 class="section-label">' + t("iterations_label") + '</h3>' +
+            '<div class="timeline">' + timelineHtml + '</div>'
+          : '') +
+
+        renderDetailNav(prev, next, "#/recipes", "recipes", "recipe");
+
+      // 绑定大图点击 → Lightbox
+      bindLightboxOnDetailImg();
+    }
+
+    /**
+     * 关于页:诗句 + 出处 + 砖红衬线署名
+     * 内容从 data/about.json 读取(想改关于页文字就改那个文件);
+     * 文件缺失或加载失败时,使用下方内置默认
+     */
+    function renderAbout() {
+      setPageTitle(t("nav_about"));
+      const d = about || {};
+      const rawLines = pick(d, "lines");
+      const lines = (rawLines && rawLines.length) ? rawLines : t("about_lines_default");
+      const source = pick(d, "source") || t("about_source_default");
+      const signature = d.signature || "LÉA";
+
+      document.getElementById("app").innerHTML =
+        '<div class="about-page">' +
+          '<p class="about-intro">' + lines.map(escapeHtml).join("<br>") + '</p>' +
+          (source ? '<p class="about-source">' + escapeHtml(source) + '</p>' : '') +
+          '<div class="signature">' + escapeHtml(signature) + '</div>' +
+        '</div>';
+    }
+
+    /* ============================================================
+       偶得板块:灵感杂货铺
+       各种有趣小东西:自建网站 / 摄影 / 文字 / 脑洞 / 音乐…
+       数据在 data/misc.json,type 字段决定卡片行为
+       ============================================================ */
+
+    /**
+     * 偶得归档:网格卡片,精选置顶
+     */
+    function renderMisc() {
+      setPageTitle(t("nav_misc"));
+
+      if (misc.length === 0) {
+        document.getElementById("app").innerHTML =
+          '<div class="empty-state">' + t("misc_empty") + '</div>';
+        return;
+      }
+
+      const sorted = sortForArchive(misc);
+      const cardsHtml = sorted.map(m => miscCardHtml(m)).join("");
+
+      document.getElementById("app").innerHTML =
+        '<div class="archive-header">' +
+          '<h2>' + t("misc_archive_title") + '</h2>' +
+          '<p class="archive-sub">' + t("misc_subtitle") + ' · ' +
+            t("misc_count").replace("{n}", misc.length) + '</p>' +
+        '</div>' +
+        '<div class="grid">' + cardsHtml + '</div>';
+    }
+
+    /**
+     * 偶得详情:文字作品 / 脑洞 / 音乐类条目
+     * (网站、链接在卡片层直接跳外链;摄影点开 Lightbox,均不进此页)
+     */
+    function renderMiscDetail(id) {
+      const item = misc.find(m => m.id === id);
+      if (!item) {
+        setPageTitle(t("not_found_title"));
+        document.getElementById("app").innerHTML =
+          '<div class="empty-state">' + t("misc_not_found") + '<br><a href="#/misc">' + t("back_misc") + '</a></div>';
+        return;
+      }
+      setPageTitle(pick(item, "title"));
+
+      const sorted = sortForArchive(misc);
+      const idx = sorted.findIndex(m => m.id === id);
+      const prev = idx > 0 ? sorted[idx - 1] : null;
+      const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+      // 正文:body(字符串数组,一段一个元素);无 body 时退回 description
+      const body = pick(item, "body") || [];
+      const contentHtml = body.length
+        ? body.map(p => '<p>' + escapeHtml(p) + '</p>').join("")
+        : (pick(item, "description") ? '<p>' + escapeHtml(pick(item, "description")) + '</p>' : '');
+
+      // 图片区:images 数组(多图竖排,支持 GIF)优先;其次单张 image;
+      // "text" 留白;留空自动配 picsum 预设图(与卡片封面同一张,seed 按 id)
+      let galleryHtml = "";
+      if (Array.isArray(item.images) && item.images.length > 0) {
+        galleryHtml = item.images
+          .map(function (img, i) {
+            return imgTag(img, item.id + "-" + (i + 1), 1200, 800, "detail-hero-img", pick(item, "title"));
+          })
+          .join("");
+      } else if (item.image === "text") {
+        galleryHtml = "";
+      } else if (item.image) {
+        galleryHtml = imgTag(item.image, item.id, 1200, 800, "detail-hero-img", pick(item, "title"));
+      } else {
+        galleryHtml = imgTag("https://picsum.photos/seed/biliart-" + item.id + "/1200/800", item.id, 1200, 800, "detail-hero-img", pick(item, "title"));
+      }
+
+      document.getElementById("app").innerHTML =
+        '<div class="detail-header">' +
+          '<h1>' + escapeHtml(pick(item, "title")) + '</h1>' +
+          '<div class="detail-meta">' +
+            '<span class="type-badge">' + t("type_" + (item.type || "idea")) + '</span>' +
+            '<span>' + escapeHtml(item.date || t("date_missing")) + '</span>' +
+          '</div>' +
+        '</div>' +
+
+        galleryHtml +
+
+        (contentHtml ? '<div class="detail-body">' + contentHtml + '</div>' : '') +
+
+        // website/link 条目:正文下方"访问 →"按钮,新标签页打开 url
+        (item.url
+          ? '<div class="detail-actions"><a class="btn" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + t("visit_link") + '</a></div>'
+          : '') +
+
+        // 音乐条目:audio 字段填了路径就显示播放器(mp3 放 audio/ 文件夹)
+        (item.audio
+          ? '<div class="audio-player"><audio controls src="' + escapeHtml(item.audio) + '"></audio></div>'
+          : '') +
+
+        renderDetailNav(prev, next, "#/misc", "misc", "misc");
+
+      if (galleryHtml) bindLightboxOnDetailImg();
+    }
+
+    /* ============================================================
+       卡片渲染(归档页通用)
+       ============================================================ */
+
+    /**
+     * 绘画卡片:缩略图 + hover 浮现标题/日期 + 精选标记
+     */
+    function paintingCardHtml(p) {
+      const featured = p.isFeatured ? '<span class="featured-badge">' + t("featured") + '</span>' : "";
+      const dateText = p.date || t("date_missing");
+      const title = pick(p, "title");
+      return '<a class="card" href="#/painting/' + encodeURIComponent(p.id) + '">' +
+               featured +
+               imgTag(p.thumb, p.id, 400, 300, "card-thumb", title) +
+               '<div class="card-overlay">' +
+                 '<div class="card-title">' + escapeHtml(title) + '</div>' +
+                 '<div class="card-meta">' + escapeHtml(dateText) + '</div>' +
+               '</div>' +
+               '<div class="card-info">' +
+                 '<div class="card-title">' + escapeHtml(title) + '</div>' +
+                 '<div class="card-highlight">' + escapeHtml(dateText) + '</div>' +
+               '</div>' +
+             '</a>';
+    }
+
+    /**
+     * 菜谱卡片:成品图 + 菜名 + 一句话 highlight + 最近改进日期 + 精选标记
+     */
+    function recipeCardHtml(r) {
+      const featured = r.isFeatured ? '<span class="featured-badge">' + t("featured") + '</span>' : "";
+      const tagsText = pickTags(r).join(" · ");
+      const name = pick(r, "name");
+      // highlight 缺失时只显示日期,不出现悬空的 "·"
+      const metaLine = [pick(r, "highlight"), r.date || t("date_missing")].filter(Boolean).join(" · ");
+      return '<a class="card" href="#/recipe/' + encodeURIComponent(r.id) + '">' +
+               featured +
+               imgTag(r.cover, r.id, 400, 300, "card-thumb", name) +
+               '<div class="card-overlay">' +
+                 '<div class="card-title">' + escapeHtml(name) + '</div>' +
+                 '<div class="card-meta">' + escapeHtml(tagsText) + '</div>' +
+               '</div>' +
+               '<div class="card-info">' +
+                 '<div class="card-title">' + escapeHtml(name) + '</div>' +
+                 '<div class="card-highlight">' + escapeHtml(metaLine) + '</div>' +
+               '</div>' +
+             '</a>';
+    }
+
+    /**
+     * 偶得卡片:photo → 点开 Lightbox 看大图;其余类型(含 website/link)→ 详情页
+     * 封面三态:路径 / 多图首张 → 自定义图;"text" → 类型占位块;留空 → picsum 预设图
+     */
+    function miscCardHtml(m) {
+      const type = m.type || "idea";
+      const typeLabel = t("type_" + type);
+      const title = pick(m, "title");
+      const featured = m.isFeatured ? '<span class="featured-badge">' + t("featured") + '</span>' : "";
+
+      // 封面图:images 数组(多图)取第一张,否则用 image
+      const firstImg = (Array.isArray(m.images) && m.images.length > 0) ? m.images[0] : m.image;
+
+      // 缩略图三态:路径 → 自定义图;"text" → 极简类型占位块;留空 → picsum 预设图(seed 按 id)
+      let thumbHtml;
+      if (firstImg === "text") {
+        thumbHtml = '<div class="card-thumb card-thumb-text"><span>' + escapeHtml(typeLabel) + '</span></div>';
+      } else if (firstImg) {
+        thumbHtml = imgTag(firstImg, m.id, 400, 300, "card-thumb", title);
+      } else {
+        thumbHtml = imgTag("https://picsum.photos/seed/biliart-" + m.id + "/400/300", m.id, 400, 300, "card-thumb", title);
+      }
+
+      // 点击目标:photo 直接看大图;其余类型(含 website/link)进详情页,详情页里有"访问 →"按钮
+      let open;
+      if (type === "photo" && firstImg && firstImg !== "text") {
+        open = '<a class="card" href="#" onclick="event.preventDefault(); openLightbox(\'' + escapeHtml(firstImg) + '\');">';
+      } else {
+        open = '<a class="card" href="#/misc/' + encodeURIComponent(m.id) + '">';
+      }
+
+      // hover 遮罩里的第二行:统一显示日期
+      const overlayMeta = m.date || t("date_missing");
+
+      return open +
+               featured +
+               thumbHtml +
+               '<div class="card-overlay">' +
+                 '<div class="card-title">' + escapeHtml(title) + '</div>' +
+                 '<div class="card-meta">' + escapeHtml(overlayMeta) + '</div>' +
+               '</div>' +
+               '<div class="card-info">' +
+                 '<div class="type-badge">' + escapeHtml(typeLabel) + '</div>' +
+                 '<div class="card-title">' + escapeHtml(title) + '</div>' +
+                 '<div class="card-highlight">' + escapeHtml(pick(m, "description") || "") + '</div>' +
+               '</div>' +
+             '</a>';
+    }
+
+    /* ============================================================
+       详情页底部三段导航
+       prev, next:相邻项数据(可为 null 表示边界置灰)
+       archiveHref:返回归档的 hash(如 #/paintings)
+       sectionKey:板块标识("paintings" / "recipes"),用于取文案
+       viewName:视图名("painting" / "recipe"),用于链接
+       ============================================================ */
+    function renderDetailNav(prev, next, archiveHref, sectionKey, viewName) {
+      const titleKey = sectionKey === "recipes" ? "name" : "title";
+      const prevHtml = prev
+        ? '<a class="prev" href="#/' + viewName + '/' + encodeURIComponent(prev.id) + '">' +
+            '<span class="nav-label">' + t("prev_" + sectionKey) + '</span>' +
+            '<span class="nav-title">' + escapeHtml(pick(prev, titleKey)) + '</span>' +
+          '</a>'
+        : '<a class="prev disabled"><span class="nav-label">' + t("first_item") + '</span><span class="nav-title">—</span></a>';
+
+      const nextHtml = next
+        ? '<a class="next" href="#/' + viewName + '/' + encodeURIComponent(next.id) + '">' +
+            '<span class="nav-label">' + t("next_" + sectionKey) + '</span>' +
+            '<span class="nav-title">' + escapeHtml(pick(next, titleKey)) + '</span>' +
+          '</a>'
+        : '<a class="next disabled"><span class="nav-label">' + t("last_item") + '</span><span class="nav-title">—</span></a>';
+
+      return '<nav class="detail-nav">' +
+               prevHtml +
+               '<a class="back" href="' + archiveHref + '">' + t("back_to_archive") + '</a>' +
+               nextHtml +
+             '</nav>';
+    }
+
+    /* ============================================================
+       交互层
+       ============================================================ */
+
+    /**
+     * 给详情页大图绑定点击 → 打开 Lightbox
+     * 在每次 render 完详情后调用
+     */
+    function bindLightboxOnDetailImg() {
+      // 绑定详情页所有大图(偶得多图竖排时有多张),点击用图片自身当前地址打开 Lightbox
+      document.querySelectorAll(".detail-hero-img").forEach(function (img) {
+        img.addEventListener("click", function () {
+          openLightbox(this.src);
+        });
+      });
+    }
+
+    /**
+     * 打开 Lightbox:全屏黑色背景 + 居中大图
+     */
+    function openLightbox(url) {
+      const lb = document.getElementById("lightbox");
+      const img = document.getElementById("lightbox-img");
+      img.src = url;
+      lb.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    /**
+     * 关闭 Lightbox
+     */
+    function closeLightbox() {
+      const lb = document.getElementById("lightbox");
+      lb.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    /**
+     * 随缘:从所有内容(绘画 + 菜谱 + 偶得)中随机抽一个,跳转到对应详情页
+     * 未来台球等新板块上线后,同样往 pool 里 push 一行即可纳入
+     */
+    function randomWalk() {
+      const pool = [];
+      paintings.forEach(p => pool.push({ type: "painting", id: p.id }));
+      recipes.forEach(r => pool.push({ type: "recipe", id: r.id }));
+      misc.forEach(m => pool.push({ type: "misc", id: m.id }));
+
+      if (pool.length === 0) {
+        showToast(t("toast_no_items"));
+        return;
+      }
+      const chosen = pool[Math.floor(Math.random() * pool.length)];
+      location.hash = "#/" + chosen.type + "/" + encodeURIComponent(chosen.id);
+    }
+
+    /* ============================================================
+       事件监听
+       ============================================================ */
+
+    // hash 变化 → 路由分发
+    window.addEventListener("hashchange", router);
+
+    // ESC 关闭 Lightbox
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeLightbox();
+    });
+
+    /* ============================================================
+       入口:DOM 加载完成后 → 加载数据 → 启动路由
+       ============================================================ */
+    document.addEventListener("DOMContentLoaded", async function () {
+      // 语言初始化:同步 html lang、导航文案与切换器高亮
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      applyNavI18n();
+      updateLangSwitch();
+
+      const ok = await loadData();
+      if (!ok) return;        // 本地预览失败时已显示提示,不再启动路由
+      if (paintings.length === 0 && recipes.length === 0 && misc.length === 0) {
+        document.getElementById("app").innerHTML =
+          '<div class="empty-state">' + t("empty_data") + '</div>';
+        return;
+      }
+      router();
+    });
+
+  </script>
+</body>
+</html>

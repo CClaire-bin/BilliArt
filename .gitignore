@@ -1,0 +1,6 @@
+# 编辑器/工具目录
+.trae/
+
+# 系统缩略图与杂项
+Thumbs.db
+.DS_Store

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "p01",
+    "title": "贝贝南瓜",
+    "title_en": "Beibei Pumpkin",
+    "title_fr": "Courge Beibei",
+    "date": "2026-10-07",
+    "tags": ["静物", "随手画","练习观察"],
+    "tags_en": ["Still Life", "Sketch", "Observation Practice"],
+    "tags_fr": ["Nature morte", "Croquis", "Exercice d'observation"],
+    "description": "记忆不过是个记号。去观察某个事物，就好像从未见过它一样。",
+    "description_en": "Memory is merely a sign. Observe something as if you had never seen it before.",
+    "description_fr": "La mémoire n'est qu'un signe. Observez quelque chose comme si vous ne l'aviez jamais vu auparavant.",
+    "image": "images/paintings/p01.jpg",
+    "thumb": "images/paintings/p01.jpg",
+    "isFeatured": true
+  }
+]

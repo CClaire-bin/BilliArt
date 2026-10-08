@@ -1,0 +1,61 @@
+[
+    {
+    "id": "r01",
+    "name": "生鱼寿司",
+    "name_en": "Raw Fish Sushi",
+    "name_fr": "Sushi au poisson cru",
+    "highlight": "蘸上酱油和一点芥末，你就可以大饱口福了！",
+    "highlight_en": "Dip it in soy sauce with a little wasabi, and you're in for a treat!",
+    "highlight_fr": "Trempez-le dans la sauce soja avec un peu de wasabi, et régalez-vous !",
+    "date": "2026-10-07",
+    "tags": ["日式", "主食", "星露谷物语"],
+    "tags_en": ["Japanese", "Main Dish", "Stardew Valley"],
+    "tags_fr": ["Japonais", "Plat principal", "Stardew Valley"],
+    "cover": "images/recipes/r01.jpg",
+    "steps": [
+      "大米清洗干净，加入水蒸熟，拌入胡萝卜丁，用余热焖10min",
+      "备菜：三文鱼切丁，大葱大致切碎，牛油果切薄片，黄瓜切丝",
+      "三文鱼丁中加入3汤匙蛋黄酱、2汤匙辣椒酱、半茶匙香油、大葱碎和适量盐，搅拌均匀，放冰箱冷藏",
+      "料汁：小碗中加入60g原味米醋，1汤匙白砂糖，1茶匙粗盐，搅拌至溶解",
+      "米饭上淋入一半料汁，搅拌约2min，再淋入剩余料汁，搅拌均匀，等待米饭冷却",
+      "寿司垫或烘焙纸上铺海苔片，铺上米饭，中心偏下的位置放黄瓜丝、牛油果、三文鱼",
+      "紧紧卷成寿司卷，刀上沾一点凉白开防沾，切片"
+    ],
+    "steps_en": [
+      "Rinse the rice clean, add water and cook until done, stir in diced carrot, then let it steam with residual heat for 10 min",
+      "Prep the ingredients: dice the salmon, roughly chop the scallions, thinly slice the avocado, and julienne the cucumber",
+      "Add 3 tbsp mayonnaise, 2 tbsp chili sauce, 1/2 tsp sesame oil, chopped scallions, and a pinch of salt to the diced salmon; mix well and refrigerate",
+      "Sushi seasoning: In a small bowl, combine 60 g plain rice vinegar, 1 tbsp white sugar, and 1 tsp coarse salt; stir until dissolved",
+      "Pour half of the seasoning over the rice and mix for about 2 minutes; pour in the remaining seasoning, mix well, and let the rice cool",
+      "Place a sheet of nori on a sushi mat or parchment paper, spread the rice over it, and place the cucumber, avocado, and salmon slightly below the center",
+      "Roll tightly into a sushi roll; dip the knife in a little cool boiled water to prevent sticking, then slice"
+    ],
+    "steps_fr": [
+      "Rincer le riz, ajouter de l'eau et le cuire jusqu'à ce qu'il soit tendre, incorporer les dés de carotte, puis laisser reposer 10 min avec la chaleur résiduelle",
+      "Préparer les ingrédients : couper le saumon en dés, hacher grossièrement la ciboule, trancher finement l'avocat et couper le concombre en julienne",
+      "Ajouter 3 c. à soupe de mayonnaise, 2 c. à soupe de sauce pimentée, 1/2 c. à café d'huile de sésame, la ciboule hachée et un peu de sel aux dés de saumon ; bien mélanger et réfrigérer",
+      "Assaisonnement : dans un petit bol, mélanger 60 g de vinaigre de riz nature, 1 c. à soupe de sucre blanc et 1 c. à café de gros sel ; remuer jusqu'à dissolution",
+      "Verser la moitié de l'assaisonnement sur le riz et mélanger environ 2 min ; verser le reste de l'assaisonnement, bien mélanger et laisser refroidir le riz",
+      "Poser une feuille de nori sur un tapis à sushi ou du papier cuisson, étaler le riz, puis déposer le concombre, l'avocat et le saumon légèrement sous le centre",
+      "Rouler fermement en maki ; tremper le couteau dans un peu d'eau bouillie froide pour éviter qu'il colle, puis couper en tranches"
+    ],
+    "iterations": [
+      {
+        "version": "v1",
+        "date": "2026-08-15",
+        "note": "第一次尝试,没有放辣椒酱，但也很好吃。",
+        "note_en": "First attempt; I didn't add chili sauce, but it was still delicious.",
+        "note_fr": "Premier essai ; je n'ai pas mis de sauce pimentée, mais c'était quand même délicieux."
+      },
+      {
+        "version": "v2",
+        "date": "2026-09-28",
+        "note": "寿司卷切片时，刀上沾一点凉白开，可以防粘",
+        "note_en": "When slicing the sushi roll, dip the knife in a little cool boiled water to prevent sticking.",
+        "note_fr": "Lorsque vous coupez le maki, trempez le couteau dans un peu d'eau bouillie froide pour éviter qu'il colle."
+      }
+    ],
+    "bvideo": "https://www.bilibili.com/video/BV1gtHC68EjS?t=8.7",
+    "isFeatured": true
+  }
+]

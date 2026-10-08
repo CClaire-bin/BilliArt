@@ -1,0 +1,6 @@
+这个文件夹用来放你的菜谱成品图。
+
+把图片文件放在这里(比如 r01.jpg, r02.jpg),然后在 data/recipes.json 里把对应菜谱的 cover 字段改成:
+  "cover": "images/recipes/r01.jpg"
+
+不放图也行,默认会自动回退到 picsum.photos 的随机占位图。

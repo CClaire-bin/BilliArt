@@ -366,11 +366,30 @@
 
     .detail-hero-img {
       width: 100%;
-      max-height: 70vh;
+      max-width: 880px;
+      max-height: 58vh;
       object-fit: contain;
       background: #EFE9DD;
-      margin: 24px 0;
+      margin: 24px auto;
+      display: block;
       cursor: zoom-in;
+    }
+
+    /* 菜谱详情多图画廊 */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 880px;
+      margin: 0 auto 24px;
+    }
+    .gallery-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #EFE9DD;
+      cursor: zoom-in;
+      display: block;
     }
 
     .detail-body {
@@ -772,6 +791,7 @@
         featured: "精选",
         steps_label: "制作步骤",
         iterations_label: "迭代记录",
+        gallery_label: "图片集",
         watch_video: "▶ 观看制作视频",
         back_to_archive: "返回归档",
         first_item: "已是第一篇",
@@ -821,6 +841,7 @@
         featured: "Featured",
         steps_label: "Steps",
         iterations_label: "Iterations",
+        gallery_label: "Gallery",
         watch_video: "▶ Watch the video",
         back_to_archive: "Back to archive",
         first_item: "This is the first one",
@@ -870,6 +891,7 @@
         featured: "À la une",
         steps_label: "Préparation",
         iterations_label: "Itérations",
+        gallery_label: "Galerie",
         watch_video: "▶ Voir la vidéo",
         back_to_archive: "Retour à l'archive",
         first_item: "Premier élément",
@@ -1287,12 +1309,15 @@
 
       // 迭代记录 timeline(按版本号倒序,最新在顶部)
       const iterations = (item.iterations || []).slice().reverse();
+
+      // 多图画廊数据(没填就不渲染)
+      const galleryImgs = item.gallery || [];
       const timelineHtml = iterations.map(it =>
         '<div class="timeline-item">' +
           '<div class="timeline-version">' + escapeHtml(it.version) +
             '<span class="v-date">· ' + escapeHtml(it.date) + '</span>' +
           '</div>' +
-          '<div class="timeline-note">' + escapeHtml(it.note) + '</div>' +
+          '<div class="timeline-note">' + escapeHtml(pick(it, "note")) + '</div>' +
         '</div>'
       ).join("");
 
@@ -1313,6 +1338,17 @@
 
         // TODO: 把 cover 字段换成你自己的图片地址(默认 images/recipes/r01.jpg)
         imgTag(item.cover, item.id, 1200, 800, "detail-hero-img", pick(item, "name")) +
+
+        // 多图画廊(可选字段 gallery;没填或为空就不显示)
+        // 想加图:recipes.json 条目里写 "gallery": ["images/recipes/r01.jpg", "images/recipes/r01-1.jpg"]
+        (galleryImgs.length
+          ? '<h3 class="section-label">' + t("gallery_label") + '</h3>' +
+            '<div class="gallery-grid">' +
+              galleryImgs.map((g, i) =>
+                imgTag(g, item.id + "-g" + (i + 1), 800, 600, "gallery-img", pick(item, "name"))
+              ).join("") +
+            '</div>'
+          : '') +
 
         '<h3 class="section-label">' + t("steps_label") + '</h3>' +
         '<ol class="steps-list">' + stepsHtml + '</ol>' +
@@ -1464,7 +1500,7 @@
       const title = pick(p, "title");
       return '<a class="card" href="#/painting/' + encodeURIComponent(p.id) + '">' +
                featured +
-               imgTag(p.thumb, p.id, 400, 300, "card-thumb", title) +
+               imgTag(p.thumb || p.image, p.id, 400, 300, "card-thumb", title) +
                '<div class="card-overlay">' +
                  '<div class="card-title">' + escapeHtml(title) + '</div>' +
                  '<div class="card-meta">' + escapeHtml(dateText) + '</div>' +
@@ -1487,7 +1523,7 @@
       const metaLine = [pick(r, "highlight"), r.date || t("date_missing")].filter(Boolean).join(" · ");
       return '<a class="card" href="#/recipe/' + encodeURIComponent(r.id) + '">' +
                featured +
-               imgTag(r.cover, r.id, 400, 300, "card-thumb", name) +
+               imgTag(r.thumb || r.cover, r.id, 400, 300, "card-thumb", name) +
                '<div class="card-overlay">' +
                  '<div class="card-title">' + escapeHtml(name) + '</div>' +
                  '<div class="card-meta">' + escapeHtml(tagsText) + '</div>' +
@@ -1588,7 +1624,7 @@
      */
     function bindLightboxOnDetailImg() {
       // 绑定详情页所有大图(偶得多图竖排时有多张),点击用图片自身当前地址打开 Lightbox
-      document.querySelectorAll(".detail-hero-img").forEach(function (img) {
+      document.querySelectorAll(".detail-hero-img, .gallery-img").forEach(function (img) {
         img.addEventListener("click", function () {
           openLightbox(this.src);
         });

@@ -12,6 +12,8 @@
     "tags_en": ["Japanese", "Main Dish", "Stardew Valley"],
     "tags_fr": ["Japonais", "Plat principal", "Stardew Valley"],
     "cover": "images/recipes/r01.jpg",
+    "thumb": "images/recipes/r01-thumb.jpg",
+    "gallery": ["images/recipes/r01.jpg", "images/recipes/r01-1.jpg"],
     "steps": [
       "大米清洗干净，加入水蒸熟，拌入胡萝卜丁，用余热焖10min",
       "备菜：三文鱼切丁，大葱大致切碎，牛油果切薄片，黄瓜切丝",
